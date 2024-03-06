@@ -7,9 +7,7 @@
 import * as THREE from "three";
 import { onMounted, ref, toRaw } from "vue";
 
-import * as dat from "lil-gui";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 
 const controlsRef = ref();
 const rendererRef = ref();
