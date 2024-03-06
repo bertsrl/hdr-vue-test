@@ -8,6 +8,7 @@ import * as THREE from "three";
 import { onMounted, ref, toRaw } from "vue";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 
 const controlsRef = ref();
 const rendererRef = ref();
@@ -38,8 +39,33 @@ onMounted(() => {
   cameraRef.value = camera;
   // init renderer
   const renderer = new THREE.WebGLRenderer({
+    alpha: true,
     canvas: canvas,
   });
+
+  renderer.shadowMap.enabled = true;
+
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 0.5;
+
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  new RGBELoader()
+    .setPath("/src/assets/textures/HDR/")
+    .load("thatch_chapel_8k.hdr", (texture) => {
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+
+      scene.background = texture;
+      scene.environment = texture;
+
+      // Adjust the intensity here
+      envMap.colorSpace = THREE.SRGBColorSpace; // Ensure correct encoding
+      scene.environment = envMap;
+
+      texture.dispose();
+      pmremGenerator.dispose();
+    });
 
   rendererRef.value = renderer;
 
@@ -54,8 +80,15 @@ onMounted(() => {
 
   controlsRef.value = controls;
 
+  const cubeMaterial = {
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.1,
+    metalness: 0.9,
+    roughness: 0.5,
+    color: 0x8418ca,
+  };
   const geometry = new THREE.BoxGeometry(1, 1, 1);
-  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+  const material = new THREE.MeshPhysicalMaterial(cubeMaterial);
   const cube = new THREE.Mesh(geometry, material);
   scene.add(cube);
 
