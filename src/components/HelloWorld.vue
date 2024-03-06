@@ -20,7 +20,7 @@ const sizes = {
   height: window.innerHeight,
 };
 
-onMounted(() => {
+onMounted(async () => {
   // Canvas
   const canvas = document.getElementById("canvas")!;
 
@@ -91,6 +91,8 @@ onMounted(() => {
   scene.add(cube);
 
   animate();
+
+  setTimeout(() => {}, 2300);
 });
 
 function animate() {
