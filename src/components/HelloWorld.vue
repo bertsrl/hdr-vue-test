@@ -50,22 +50,20 @@ onMounted(() => {
 
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
-  new RGBELoader()
-    .setPath("/src/assets/textures/HDR/")
-    .load("thatch_chapel_4k.hdr", (texture) => {
-      const pmremGenerator = new THREE.PMREMGenerator(renderer);
-      const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+  new RGBELoader().load("./textures/HDR/thatch_chapel_4k.hdr", (texture) => {
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    const envMap = pmremGenerator.fromEquirectangular(texture).texture;
 
-      scene.background = texture;
-      scene.environment = texture;
+    scene.background = texture;
+    scene.environment = texture;
 
-      // Adjust the intensity here
-      envMap.colorSpace = THREE.SRGBColorSpace; // Ensure correct encoding
-      scene.environment = envMap;
+    // Adjust the intensity here
+    envMap.colorSpace = THREE.SRGBColorSpace; // Ensure correct encoding
+    scene.environment = envMap;
 
-      texture.dispose();
-      pmremGenerator.dispose();
-    });
+    texture.dispose();
+    pmremGenerator.dispose();
+  });
 
   rendererRef.value = renderer;
 
