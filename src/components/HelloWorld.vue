@@ -52,7 +52,7 @@ onMounted(() => {
 
   new RGBELoader()
     .setPath("/src/assets/textures/HDR/")
-    .load("thatch_chapel_8k.hdr", (texture) => {
+    .load("thatch_chapel_4k.hdr", (texture) => {
       const pmremGenerator = new THREE.PMREMGenerator(renderer);
       const envMap = pmremGenerator.fromEquirectangular(texture).texture;
 
